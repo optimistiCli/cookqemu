@@ -38,7 +38,7 @@ cookqemu.sh <settings dir or plist>
 ```
 or
 ```bash
-cookqemu.sh -h [t] -v -n <name> -i <boot iso> -d <disk size> -m <mem size> 
+cookqemu.sh -h [t] -v -n <name> -i <boot iso> -d <disk size> -m <mem size>
   -p <CPU count> -g -s <ssh port> -S <subnet> -u <username> -t <path>
   -f <path> -b <path> -I <path> -V <VMs dir> -D <assets dir> -e|-E <URL>
   <settings dir>|<settings plist>
@@ -71,9 +71,9 @@ cookqemu.sh -h [t] -v -n <name> -i <boot iso> -d <disk size> -m <mem size>
 
 ## Settings dirs and plists
 Settings dir for `cookqemu.sh` must contain a settings `.plist` file and an ISO file
-(or its url, [see below](#downloading-files)) to boot the VM from. The plist format (short for 
-"Property List") is a macOS-specific way to put some structured and typed data 
-into an xml. Well, it is a bit more than that, but no matter. The easy way of 
+(or its url, [see below](#downloading-files)) to boot the VM from. The plist format (short for
+"Property List") is a macOS-specific way to put some structured and typed data
+into an xml. Well, it is a bit more than that, but no matter. The easy way of
 dealing with a `cookqemu.plist` – take one that comes with this script
 and edit it to your liking.
 
@@ -107,7 +107,7 @@ alpine_with_extras
     └── .vimrc
 ```
 
-On guest you will see: 
+On guest you will see:
 ```bash
 $ mkdir /tmp/extras && mount /dev/vdc /tmp/extras
 $ tar tf /tmp/extras/home.tar.gz
@@ -120,7 +120,7 @@ $ tar tf /tmp/extras/home.tar.gz
 ## Templates
 Templates are used to cook guest-side installation scripts. Any file in the
 settings dir that has a `.template` extension is treated as a template. You can
-think of templates as of bash heredocs that get qemu cooking variables ([see 
+think of templates as of bash heredocs that get qemu cooking variables ([see
 below](#available-variables)) substituted. The resulting script is added to the extras ISO and made
 executable by all.
 
@@ -162,8 +162,8 @@ Any other file in the settings dir will be added to the Extras Iso as-is.
 ## Downloading files
 If a file must be downloaded before using it for the guest installation you can
 put in place of it an `.url` file with the download URL inside. Basically a
-`filename.ext.url` file instructs the script to download `filename.ext`. This 
-works with ISOs, templates and regular files. So the bare minimum settings dir 
+`filename.ext.url` file instructs the script to download `filename.ext`. This
+works with ISOs, templates and regular files. So the bare minimum settings dir
 can be something like this:
 ```bash
 $ tree min_net_alpine
@@ -177,3 +177,9 @@ https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/aarch64/alpine-virt-3.16.0-
 The downloaded files are stored in `cookqemu.downloads` dir inside the
 settings dir. If you need A file re-downloaded just delete it from this dir
 before running the script. Or delete the `cookqemu.downloads` alltogether.
+
+# Disclaimer
+You can use this script in any manner that suits you though remember at all
+times that by using it you agree that you use it at your own risk and neither
+I nor anybody else except for yourself is to be held responsible in case
+anything goes wrong as a result of using this script.
