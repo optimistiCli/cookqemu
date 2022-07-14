@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CQCpusNum</key>
+	<integer>4</integer>
+	<key>CQGUI</key>
+	<true/>
+	<key>CQHDDSize</key>
+	<dict>
+		<key>unit</key>
+		<string>G</string>
+		<key>value</key>
+		<integer>32</integer>
+	</dict>
+	<key>CQHostname</key>
+	<string>ubuntu</string>
+	<key>CQInsISO</key>
+	<string>alpine-virt-3.16.0-aarch64.iso</string>
+	<key>CQPortMap</key>
+	<array>
+		<dict>
+			<key>guest</key>
+			<integer>22</integer>
+			<key>host</key>
+			<integer>2022</integer>
+			<key>proto</key>
+			<string>tcp</string>
+		</dict>
+	</array>
+	<key>CQRAMSize</key>
+	<dict>
+		<key>unit</key>
+		<string>G</string>
+		<key>value</key>
+		<integer>2</integer>
+	</dict>
+	<key>CQSubnet</key>
+	<string>192.168.99.0/24</string>
+	<key>CQUsername</key>
+	<string>some</string>
+</dict>
+</plist>

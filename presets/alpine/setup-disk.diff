@@ -1,0 +1,5 @@
+--- /sbin/setup-disk.backup
++++ /sbin/setup-disk
+@@ -1599,1 +1599,1 @@
+-if [ -n "$USE_EFI" ] && [ -z "$BOOT_SIZE" ]; then
++if [ -n "$USE_EFI" ] && [ -z "$BOOT_SIZE" ]; then

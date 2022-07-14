@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+EXTRAS_DIR="\$(dirname "\$0")"
+CHROOT_SCRIPT_NAME='chroot.sh'
+
+export HDD_DEV='/dev/vda'
+export EFI_DEV="\${HDD_DEV}1"
+export ROOT_DEV="\${HDD_DEV}2"
+
+export TZ='Europe/Amsterdam'
+export DEBIAN_FRONTEND='noninteractive'
+
+setup-keymap us us
+setup-hostname '$CQ__HOSTNAME'
+sysctl net.ipv6.conf.all.disable_ipv6=1
+setup-interfaces -a
+rc-service networking start
+setup-apkrepos -1c
+
+apk add util-linux-misc e2fsprogs gptfdisk parted
+
+
+parted -s "\$HDD_DEV" -- \\
+    mklabel gpt \\
+    mkpart primary fat32 1MiB 261MiB \\
+    set 1 esp on \\
+    mkpart primary ext2 261MiB 100%
+
+mkfs.ext4 "\$ROOT_DEV"
+mount "\$ROOT_DEV" /mnt
+
+tar -C /mnt -xf "\${EXTRAS_DIR}/ubuntu-base-22.04-base-arm64.tar.gz"
+
+mkfs.vfat "\$EFI_DEV"
+mkdir /mnt/boot/efi
+mount "\$EFI_DEV" /mnt/boot/efi
+
+install -D /etc/resolv.conf /mnt/etc/resolv.conf
+
+for FS in /sys /proc /dev ; do
+    mount --rbind "\$FS" /mnt/"\$FS"
+done
+
+install -D "\${EXTRAS_DIR}/\${CHROOT_SCRIPT_NAME}" /mnt/
+grep ':11:' /etc/group >> /mnt/etc/group
+SHELL=/bin/bash chroot /mnt "/\${CHROOT_SCRIPT_NAME}"

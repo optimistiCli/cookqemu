@@ -1,0 +1,19 @@
+startup_message off
+vbell on
+term screen-256color
+
+defscrollback 10000
+shell -$SHELL
+
+screen -t home
+
+#screen -t tmp
+#select 1
+#stuff "cd /tmp/"
+
+altscreen on
+
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W}%c %{g}]'
+
+select 0

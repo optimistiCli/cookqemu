@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -e
+
+cat<<EOF >/etc/fstab
+\$ROOT_DEV / ext4 defaults,noatime 0 1
+\$EFI_DEV /boot/efi vfat defaults 0 2
+EOF
+
+install -d /etc/netplan
+cat<<EOF >/etc/netplan/99_config.yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s2:
+      dhcp4: true
+EOF
+
+adduser \\
+    --disabled-login \\
+    --gecos '' \\
+    '$CQ__USERNAME'
+adduser '$CQ__USERNAME' sudo
+echo '$CQ__USERNAME:admin' | chpasswd
+
+echo "root:\$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32)" | chpasswd
+passwd -l root
+
+apt-get update
+apt-get -y install \\
+    grub-efi \\
+    linux-{headers,image}-generic \\
+    efivar \\
+    efibootmgr \\
+    network-manager \\
+    ssh \\
+    less \\
+    netplan.io \\
+    vim \\
+    sudo \\
+    inetutils-ping \\
+    bind9-dnsutils \\
+    curl
+
+sed -i 's/.*GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /etc/default/grub
+
+grub-install \\
+    --bootloader-id=ubuntu \\
+    --efi-directory=/boot/efi \\
+    --boot-directory=/boot \\
+    "\$HDD_DEV"
+
+update-grub
+
+efibootmgr -v --timeout 1

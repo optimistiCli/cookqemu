@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- VM name; 
+         required -->
+	<key>CQHostname</key>
+	<string>alpine</string>
+
+    <!-- OS ISO image to boot from; 
+         required unless there is only one .iso[.url] file in settings dir -->
+	<key>CQInsISO</key>
+	<string>alpine-virt-3.16.0-aarch64.iso</string>
+
+    <!-- VM HDD size;
+         required -->
+	<key>CQHDDSize</key>
+	<dict>
+		<key>unit</key>
+		<string>G</string>
+		<key>value</key>
+		<integer>16</integer>
+	</dict>
+
+    <!-- VM RAM size;
+         required -->
+	<key>CQRAMSize</key>
+	<dict>
+		<key>unit</key>
+		<string>M</string>
+		<key>value</key>
+		<integer>512</integer>
+	</dict>
+
+    <!-- Number of CPUs in VM;
+         required -->
+	<key>CQCpusNum</key>
+	<integer>2</integer>
+
+    <!-- Cook Cocoa GUI VM;
+         otherwise cooks headless VM -->
+	<key>CQGUI</key>
+	<false/>
+
+    <!-- VM ports exposed on host; 
+         optional; see -s for ssh port default -->
+	<key>CQPortMap</key>
+	<array>
+		<dict>
+			<key>guest</key>
+			<integer>22</integer>
+			<key>host</key>
+			<integer>2022</integer>
+			<key>proto</key>
+			<string>tcp</string>
+		</dict>
+	</array>
+
+    <!-- Subnet on guest main network interface;
+         optional; see -S for default -->
+	<key>CQSubnet</key>
+	<string>192.168.99.0/24</string>
+
+    <!-- Name of the user to create in VM;
+         defaults to host username -->
+	<key>CQUsername</key>
+	<string>some</string>
+</dict>
+</plist>

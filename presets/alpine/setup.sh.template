@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+EXTRAS_DIR="\$(dirname "\$0")"
+HDD_DEV='/dev/vda'
+ROOT_DEV="\${HDD_DEV}2"
+FUT_ROOT='/tmp/future_root'
+
+setup-keymap us us
+setup-hostname '$CQ__HOSTNAME'
+
+sysctl net.ipv6.conf.all.disable_ipv6=1
+setup-interfaces -a
+rc-service networking start
+rc-update add networking boot
+
+setup-timezone -z 'UTC'
+setup-ntp chrony
+
+setup-apkrepos -1c
+apk add sudo vim screen patch bash curl less
+
+echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel
+chmod 0440 /etc/sudoers.d/wheel
+adduser -g '' -D -s /bin/bash '$CQ__USERNAME' '$CQ__USERNAME'
+addgroup '$CQ__USERNAME' wheel
+echo '$CQ__USERNAME:admin' | chpasswd
+
+HOME_TAR="\${EXTRAS_DIR}/home.tar.gz"
+tar -C '/home/${CQ__USERNAME}' -xf "\$HOME_TAR"
+chown -R '${CQ__USERNAME}:${CQ__USERNAME}' '/home/${CQ__USERNAME}'
+
+setup-sshd -c 'openssh'
+
+echo "root:\$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32)" | chpasswd
+passwd -l root
+
+patch /sbin/setup-disk < "\${EXTRAS_DIR}/setup-disk.diff"
+export DEFAULT_DISK=none
+export USE_EFI=yes
+yes | setup-disk -m sys -s 0 "\$HDD_DEV"
+
+mkdir "\$FUT_ROOT"
+mount "\$ROOT_DEV" "\$FUT_ROOT"
+tar -C / -cf - home | tar -C "\$FUT_ROOT" --numeric-owner -xf -
+rm "\${FUT_ROOT}/etc/motd"
+sed -Ei 's ^(root:.*:)[^:]{1,}$ \\1/bin/bash ' "\${FUT_ROOT}/etc/passwd"
